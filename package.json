@@ -1,0 +1,16 @@
+{
+    "name": "simplesoapserver",
+    "version": "1.0.0",
+    "main": "main.js",
+    "keywords": [
+        "soap",
+        "test",
+        "server",
+        "client",
+        "stub"
+    ],
+    "author": "Philippe Tjon - A - Hen, philippe@tjonahen.nl",
+    "contributors": [
+    ],
+    "dependencies": {}
+}
