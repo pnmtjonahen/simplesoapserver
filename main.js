@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2014 Philippe Tjon-A-Hen philippe@tjonahen.nl
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 var http = require("http"),
      url = require("url"),
      path = require("path"),
@@ -35,7 +51,6 @@ function processSoap(request, response) {
       });
 
       request.on('end', function () {
-         console.log(body);
          for (i = 0; i < responseMessage.length; i++) {
             if (responseMessage[i].match.test(body)) {
                response.writeHead(200, {"Content-Type": "text/xml"});
@@ -64,14 +79,13 @@ function processResponseMessage(request, response) {
    });
 
    request.on('end', function () {
-      console.log(body);
       newMessageResponse = JSON.parse(body);
       if (newMessageResponse.match !== undefined) {
          newMessageResponse.match = new RegExp(newMessageResponse.match, "m");
          responseMessage.push(newMessageResponse);
          sendHtppResponse(response, 202, "202: accepted\n");
       } else {
-         sendHtppResponse(response, 404, "400 Bad Request\n");
+         sendHtppResponse(response, 400, "400 Bad Request\n");
       }
    });
 };
@@ -92,13 +106,13 @@ http.createServer(function (request, response) {
         filename = path.join(process.cwd(), decodeURI(uri));
    var headers = request.headers;
    if (endsWith(filename, 'api/endpoint')) {
-      if (headers['Content-Type'] === 'text/xml') {
+      if (headers['Content-Type'] === 'text/xml' || headers['content-type'] === 'text/xml') {
          processSoap(request, response);
       } else {
          unsupportedMediaType(response);
       }
    } else if (endsWith(filename, 'api/data')) {
-      if (headers['Content-Type'] === 'application/json') {
+      if (headers['Content-Type'] === 'application/json' || headers['content-type'] === 'application/json') {
          processSetResponseMessage(request, response);
       } else {
          unsupportedMediaType(response);

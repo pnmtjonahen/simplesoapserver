@@ -1,7 +1,18 @@
 {
     "name": "simplesoapserver",
     "version": "1.0.0",
+    "description": "Simple SOAP endpoint (Stubbing) server",
     "main": "main.js",
+    "license": "GPL-3.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pnmtjonahen/simplesoapserver.git"
+    },
+    "scripts": {
+        "serve": "node main.js",
+        "start": "npm run serve",
+        "test": "istanbul cover jasmine"
+    },
     "keywords": [
         "soap",
         "test",
@@ -9,8 +20,20 @@
         "client",
         "stub"
     ],
-    "author": "Philippe Tjon - A - Hen, philippe@tjonahen.nl",
+    "author": "Philippe Tjon - A - Hen",
+    "email": "philippe@tjonahen.nl",
     "contributors": [
+        {
+            "name": "Philippe Tjon-A-Hen",
+            "url": "https://github.com/pnmtjonahen"
+        }
     ],
-    "dependencies": {}
+    "dependencies": {
+    },
+    "devDependencies": {
+        "istanbul": "^0.4.3",
+        "jasmine": "^2.4.1",
+        "jasmine-core": "^2.4.1",
+        "request": "^2.72.0"
+    }
 }
