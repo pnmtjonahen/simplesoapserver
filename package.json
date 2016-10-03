@@ -10,7 +10,7 @@
   },
   "scripts": {
     "serve": "node main.js",
-    "start": "npm run serve",
+    "start": "node ..\/..\/..\/..\/usr\/local\/bin\/npm run serve",
     "test": "istanbul cover jasmine"
   },
   "keywords": [

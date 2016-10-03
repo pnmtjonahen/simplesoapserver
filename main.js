@@ -53,7 +53,7 @@
          });
 
          request.on('end', () => {
-            for (i = 0; i < responseMessage.length; i++) {
+            for (var i = 0; i < responseMessage.length; i++) {
                if (responseMessage[i].match.test(body)) {
                   response.writeHead(200, {"Content-Type": "text/xml"});
                   response.write(responseMessage[i].data);
@@ -81,7 +81,7 @@
       });
 
       request.on('end', () => {
-         newMessageResponse = JSON.parse(body);
+         var newMessageResponse = JSON.parse(body);
          if (newMessageResponse.match !== undefined) {
             newMessageResponse.match = new RegExp(newMessageResponse.match, "m");
             responseMessage.push(newMessageResponse);
