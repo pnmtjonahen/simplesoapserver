@@ -16,25 +16,30 @@
  */
 "use strict";
 (() => {
-   var http = require("http"),
+   const http = require("http"),
         url = require("url"),
         path = require("path"),
-        port = process.argv[2] || 8181;
+        config = require("config");
+
+   const port = config.get("port"),
+      maxbuffer = config.get("maxbuffer");
+
 
    var responseMessage = [];
+
 
    function endsWith(str, suffix) {
       return str.indexOf(suffix, str.length - suffix.length) !== -1;
    }
-   ;
+
    function unsupportedMediaType(response) {
       sendHtppResponse(response, 415, "415 Unsupported Media Type\n");
    }
-   ;
+
    function methodNotAllowed(response) {
-      sendHtppResponse(response, 405, "405: Methode not allowed\n");
+      sendHtppResponse(response, 405, "405 Methode not allowed\n");
    }
-   ;
+
    function sendHtppResponse(response, code, message) {
       response.writeHead(code, {"Content-Type": "text/plain"});
       response.write(message);
@@ -47,13 +52,13 @@
 
          request.on('data', (data) => {
             body += data;
-            if (body.length > 1e6) {
+            if (body.length > maxbuffer) {
                request.connection.destroy();
             }
          });
 
          request.on('end', () => {
-            for (var i = 0; i < responseMessage.length; i++) {
+            for (let i = 0; i < responseMessage.length; i++) {
                if (responseMessage[i].match.test(body)) {
                   response.writeHead(200, {"Content-Type": "text/xml"});
                   response.write(responseMessage[i].data);
@@ -69,29 +74,30 @@
          methodNotAllowed(response);
       }
    }
-   ;
+
 
    function processResponseMessage(request, response) {
       var body = '';
       request.on('data', (data) => {
-         body += data;
-         if (body.length > 1e6) {
-            request.connection.destroy();
+         if (body.length < maxbuffer) {
+            body += data;
          }
       });
 
       request.on('end', () => {
-         var newMessageResponse = JSON.parse(body);
-         if (newMessageResponse.match !== undefined) {
-            newMessageResponse.match = new RegExp(newMessageResponse.match, "m");
-            responseMessage.push(newMessageResponse);
-            sendHtppResponse(response, 202, "202: accepted\n");
-         } else {
-            sendHtppResponse(response, 400, "400 Bad Request\n");
+         if (body.length <= maxbuffer) {
+            var newMessageResponse = JSON.parse(body);
+            if (newMessageResponse.match !== undefined && newMessageResponse.data !== undefined) {
+               newMessageResponse.match = new RegExp(newMessageResponse.match, "m");
+               responseMessage.push(newMessageResponse);
+               sendHtppResponse(response, 202, "202 accepted\n");
+               return;
+            }
          }
+         sendHtppResponse(response, 400, "400 Bad Request\n");
       });
    }
-   ;
+
 
    function processSetResponseMessage(request, response) {
       if (request.method === 'POST') {
@@ -103,7 +109,7 @@
          methodNotAllowed(response);
       }
    }
-   ;
+
 
    var server = http.createServer((request, response) => {
       var uri = url.parse(request.url).pathname,

@@ -116,6 +116,19 @@ describe("simplesoapserver", function () {
             done();
          });
       });
+      it("returns status code 400 (to mutch data)", function (done) {
+         var options = {
+            uri: base_url + "api/data",
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: {'match':'power', 'data':'<sample>This is to mutch for our simple soap server to handle, config states max 50 characters</sample>'},
+            json:true
+         };
+         request(options, function (error, response, body) {
+            expect(response.statusCode).toBe(400);
+            done();
+         });
+      });
    });
    describe("POST /api/data", function () {
       it("returns status code 202", function (done) {

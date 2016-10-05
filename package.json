@@ -9,8 +9,8 @@
     "url": "https://github.com/pnmtjonahen/simplesoapserver.git"
   },
   "scripts": {
-    "serve": "node main.js",
-    "start": "node ..\/..\/..\/..\/usr\/local\/bin\/npm run serve",
+    "serve": "node main.js --NODE_CONFIG='{\"port\":8181, \"maxbuffer\":1e6}'",
+    "start": "node usr/local/bin/npm run serve",
     "test": "istanbul cover jasmine"
   },
   "keywords": [
@@ -29,6 +29,7 @@
     }
   ],
   "dependencies": {
+    "config": "1.21.0",
     "dev": "0.1.3"
   },
   "devDependencies": {
