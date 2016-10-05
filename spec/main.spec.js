@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global expect */
+
 var request = require("request");
 
 require("../main");
