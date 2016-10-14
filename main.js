@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-"use strict";
+/*jshint esversion: 6 */
 (() => {
+"use strict";
    const http = require("http"),
         url = require("url"),
         path = require("path"),
@@ -46,6 +47,13 @@
       response.end();
    }
 
+
+   /**
+    * Processes an incomming soap message. If no matching responseMessage is found a soap error is returned. 
+    * 
+    * @param http.IncomingMessage request 
+    * @param http.ServerResponse response
+    */
    function processSoap(request, response) {
       if (request.method === 'POST') {
          var body = '';
@@ -76,6 +84,12 @@
    }
 
 
+   /**
+    * Process the posible responseMessage, checks for correct json format and max size of message.  
+    * 
+    * @param http.IncomingMessage request 
+    * @param http.ServerResponse response
+    */
    function processResponseMessage(request, response) {
       var body = '';
       request.on('data', (data) => {
@@ -99,6 +113,12 @@
    }
 
 
+   /**
+    * Process a set-response call, adding a posible soap response to the responseMessages.
+    * 
+    * @param http.IncomingMessage request 
+    * @param http.ServerResponse response
+    */
    function processSetResponseMessage(request, response) {
       if (request.method === 'POST') {
          processResponseMessage(request, response);
