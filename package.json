@@ -10,7 +10,7 @@
   },
   "scripts": {
     "serve": "node main.js --NODE_CONFIG='{\"port\":8181, \"maxbuffer\":1e6}'",
-    "start": "node usr/local/bin/npm run serve",
+    "start": "node /usr/local/bin/npm run serve",
     "test": "istanbul cover jasmine"
   },
   "keywords": [
